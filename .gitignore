@@ -1,0 +1,5 @@
+# Node dependences
+node_modules/
+
+#Typescript build
+dist/
