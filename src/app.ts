@@ -5,7 +5,7 @@ import { resolve } from 'path';
 import express, { Application } from 'express';
 
 // Importação dos arquivos de configuração de rotas
-import Routes from './routes/Routes';
+import Routes from './routes/measureRoutes';
 
 // Configuração das variáveis de ambiente
 dotenv.config({ path: resolve(__dirname, '../.env') });

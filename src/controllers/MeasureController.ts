@@ -2,13 +2,15 @@ import { Request, Response } from 'express';
 import { Router } from 'express';
 import fs from 'fs';
 import path from 'path';
+import GoogleGeminiVision from '../utils/GoogleGeminiVision';
 
 const router = Router();
 
-class Controller{
+class MeasureController{
+  private googleGeminiVision = new GoogleGeminiVision();
 
   // Método responsável por fazer o upload da imagem e processa-la no gemini e salvar no banco de dados
-  store(req: Request, res: Response): void {
+  async store(req: Request, res: Response): Promise<void> {
     const { image, customer_code, measure_datetime, measure_type } = req.body;
 
     // Validar se todos os campos obrigatórios estão presentes
@@ -58,35 +60,30 @@ class Controller{
     }
 
     // Criar o diretório se não existir
-    fs.mkdir(path.dirname(filePath), { recursive: true }, (err) => {
-      if (err) {
-        console.error(err);
-        res.status(500).json({
-          error_code: "SERVER_ERROR",
-          error_description: "Erro ao criar o diretório"
-        });
-        return;
-      }
+    try {
+      await fs.promises.mkdir(path.dirname(filePath), { recursive: true });
 
       // Decodificar e salvar o arquivo
-      fs.writeFile(filePath, base64Data, 'base64', (err) => {
-        if (err) {
-          console.error(err);
-          res.status(500).json({
-            error_code: "SERVER_ERROR",
-            error_description: "Erro ao salvar a imagem"
-          });
-          return;
-        }
+      await fs.promises.writeFile(filePath, base64Data, 'base64');
 
-        // Retornar resposta de sucesso com dados fictícios
-        res.status(200).json({
-          image_url: `http://example.com/uploads/images/image.${extension}`,
-          measure_value: 123, // Substitua pelo valor calculado
-          measure_uuid: 'abc-123-uuid' // Substitua pelo UUID real
-        });
+      // Chamar o método generate da classe GoogleGeminiVision
+      const measureValue = await this.googleGeminiVision.generate(image.replace(/^data:image\/\w+;base64,/, ''));
+
+      console.log(measureValue);
+
+      // Retornar resposta de sucesso com o valor calculado
+      res.status(200).json({
+        image_url: `http://example.com/uploads/images/image.${extension}`,
+        measure_value: measureValue,
+        measure_uuid: 'abc-123-uuid' // Substitua pelo UUID real
       });
-    });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        error_code: "SERVER_ERROR",
+        error_description: "Erro ao processar a imagem com o Google Gemini"
+      });
+    }
   }
 
   confirm(req: Request, res: Response){
@@ -98,4 +95,4 @@ class Controller{
   }
 }
 
-export default new Controller();
+export default new MeasureController();
