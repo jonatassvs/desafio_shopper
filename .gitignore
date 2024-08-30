@@ -6,3 +6,6 @@ dist/
 
 #Variavel de ambiente
 .env
+
+#pasta de uplod
+uploads/*
