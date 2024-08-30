@@ -15,8 +15,16 @@ class App {
 
   constructor() {
     this.app = express();
+    this.middlewares();
     this.routes();
   }
+
+  // Configuração de middlewares
+  private middlewares(): void {
+    // Middleware para interpretar JSON
+    this.app.use(express.json({ limit: '50mb' }));
+  }
+
 
   // Definição de rotas da API
   private routes(): void {
