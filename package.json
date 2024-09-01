@@ -9,6 +9,7 @@
     "dev": "nodemon src/index.ts",
     "sequelize:init": "npx sequelize-cli init --config src/config/config.json",
     "sequelize:migrate": "npx sequelize-cli db:migrate --config src/config/config.json",
+    "sequelize:migrate:undo": "npx sequelize-cli db:migrate:undo --config src/config/config.json",
     "sequelize:create": "npx sequelize-cli db:create --config src/config/config.json",
     "sequelize:migration:generate": "npx sequelize-cli migration:generate --name --config src/config/config.json"
   },

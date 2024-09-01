@@ -9,6 +9,7 @@ interface MeasureAttributes {
   measure_value: number;
   measure_uuid: string;
   confirmed_value: number | null;
+  image_url?: string; 
 }
 
 interface MeasureCreationAttributes extends Optional<MeasureAttributes, 'id'> {}
@@ -21,6 +22,7 @@ export default class Measure extends Model<MeasureAttributes, MeasureCreationAtt
   public measure_value!: number;
   public measure_uuid!: string;
   public confirmed_value!: number;
+  public image_url?: string;
 
   public static initialize(sequelize: Sequelize) {
     Measure.init({
@@ -78,6 +80,10 @@ export default class Measure extends Model<MeasureAttributes, MeasureCreationAtt
             msg: 'O valor confirmado precisa ser um número inteiro.',
           }
         }
+      },
+      image_url: {
+        type: DataTypes.STRING,
+        allowNull: true,
       }
     }, {
       sequelize,
