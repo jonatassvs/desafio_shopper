@@ -13,7 +13,7 @@ router.patch('/', (req: Request, res: Response) => {
   MeasureController.confirm(req, res);
 })
 
-router.get('/', (req: Request, res: Response) => {
+router.get('/:customer_code/list', (req: Request, res: Response) => {
   MeasureController.list(req, res)
 })
 

@@ -48,9 +48,6 @@ class MeasureController{
     const extension = matches[1];
     const base64Data = matches[2];
 
-    // Definir o caminho onde o arquivo será salvo
-    const filePath = path.join(__dirname, '..', '..', 'uploads', 'images', `image.${extension}`);
-
     // Verificar se já existe uma medida com o mesmo tipo e data
     const existingMeasure = await Measure.findOne({
       where: {
@@ -69,6 +66,12 @@ class MeasureController{
 
     // Criar o diretório se não existir
     try {
+      // Gerar um UUID único
+      const measureUUID = uuidv4();
+
+      // Definir o caminho onde o arquivo será salvo
+      const filePath = path.join(__dirname, '..', '..', 'uploads', 'images', `${measureUUID}.${extension}`);
+
       await fs.promises.mkdir(path.dirname(filePath), { recursive: true });
 
       // Decodificar e salvar o arquivo
@@ -76,9 +79,6 @@ class MeasureController{
 
       // Chamar o método generate da classe GoogleGeminiVision
       const measureValue = await this.googleGeminiVision.generate(image.replace(/^data:image\/\w+;base64,/, ''));
-
-      // Gerar um UUID único
-      const measureUUID = uuidv4();
 
       // Salvar no banco de dados
       const newMeasure = await Measure.create({
@@ -88,11 +88,12 @@ class MeasureController{
         measure_value: measureValue,
         measure_uuid: measureUUID,
         confirmed_value: 0,
+        image_url: `${measureUUID}.${extension}`
       });
 
       // Retornar resposta de sucesso com o valor calculado
       res.status(200).json({
-        image_url: `http://localhost:3000/uploads/images/image.${extension}`,
+        image_url: `http://localhost:3000/uploads/images/${measureUUID}.${extension}`,
         measure_value: measureValue,
         measure_uuid: measureUUID
       });
@@ -158,8 +159,68 @@ class MeasureController{
 
   }
 
-  list(req: Request, res: Response){
-    res.send('Lista');
+  // Método para listar todas as medidas de um cliente
+  public async list(req: Request, res: Response): Promise<void> {
+    const customerCode = req.params.customer_code;
+    const measureType = req.query.measure_type as string;
+
+    // Validar se o código do cliente foi fornecido
+    if (!customerCode) {
+      res.status(400).json({
+        error_code: 'INVALID_DATA',
+        error_description: 'Código do cliente não fornecido.'
+      });
+      return;
+    }
+
+    // Validar o tipo de medida
+    const validMeasureTypes = ['WATER', 'GAS'];
+    if (measureType && !validMeasureTypes.includes(measureType.toUpperCase())) {
+      res.status(400).json({
+        error_code: 'INVALID_TYPE',
+        error_description: 'Tipo de medição não permitido.'
+      });
+      return;
+    }
+
+    try {
+      // Filtrar medidas com base no código do cliente e no tipo de medida (se fornecido)
+      const measures = await Measure.findAll({
+        where: {
+          customer_code: customerCode,
+          ...(measureType ? { measure_type: measureType.toUpperCase() } : {})
+        }
+      });
+
+      // Verificar se nenhuma medida foi encontrada
+      if (measures.length === 0) {
+        res.status(404).json({
+          error_code: 'MEASURES_NOT_FOUND',
+          error_description: 'Nenhuma leitura encontrada.'
+        });
+        return;
+      }
+
+      // Formatar resposta
+      const formattedMeasures = measures.map(measure => ({
+        measure_uuid: measure.measure_uuid,
+        measure_datetime: measure.measure_datetime,
+        measure_type: measure.measure_type,
+        has_confirmed: measure.confirmed_value !== 0,
+        image_url: `http://localhost:3000/uploads/images/${measure.image_url}`
+      }));
+
+      res.status(200).json({
+        customer_code: customerCode,
+        measures: formattedMeasures
+      });
+    } catch (error) {
+      console.error('Erro ao listar medidas:', error);
+      res.status(500).json({
+        error_code: 'SERVER_ERROR',
+        error_description: 'Erro ao buscar medidas no banco de dados.'
+      });
+    }
   }
 }
 
