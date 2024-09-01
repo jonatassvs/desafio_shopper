@@ -39,7 +39,6 @@ class GoogleGeminiVision {
 
       // Converter o texto retornado para número
       const number = parseInt(text);
-      console.log(number);
 
       if (isNaN(number)) {
         throw new Error("Failed to convert response to a number");

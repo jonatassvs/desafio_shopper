@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { Router } from 'express';
 import fs from 'fs';
 import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
+import Measure from '../models/Measure'; 
 import GoogleGeminiVision from '../utils/GoogleGeminiVision';
 
 const router = Router();
@@ -69,13 +71,24 @@ class MeasureController{
       // Chamar o método generate da classe GoogleGeminiVision
       const measureValue = await this.googleGeminiVision.generate(image.replace(/^data:image\/\w+;base64,/, ''));
 
-      console.log(measureValue);
+      // Gerar um UUID único
+      const measureUUID = uuidv4();
+
+      // Salvar no banco de dados
+      const newMeasure = await Measure.create({
+        customer_code,
+        measure_datetime,
+        measure_type,
+        measure_value: measureValue,
+        measure_uuid: measureUUID,
+        confirmed_value: 0,
+      });
 
       // Retornar resposta de sucesso com o valor calculado
       res.status(200).json({
-        image_url: `http://example.com/uploads/images/image.${extension}`,
+        image_url: `http://localhost:3000/uploads/images/image.${extension}`,
         measure_value: measureValue,
-        measure_uuid: 'abc-123-uuid' // Substitua pelo UUID real
+        measure_uuid: measureUUID
       });
     } catch (error) {
       console.error(error);

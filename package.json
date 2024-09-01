@@ -6,7 +6,11 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/index.js",
-    "dev": "nodemon src/index.ts"
+    "dev": "nodemon src/index.ts",
+    "sequelize:init": "npx sequelize-cli init --config src/config/config.json",
+    "sequelize:migrate": "npx sequelize-cli db:migrate --config src/config/config.json",
+    "sequelize:create": "npx sequelize-cli db:create --config src/config/config.json",
+    "sequelize:migration:generate": "npx sequelize-cli migration:generate --name --config src/config/config.json"
   },
   "author": "Jonatas Vieira",
   "license": "ISC",
@@ -15,11 +19,14 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mariadb": "^3.3.1",
-    "sequelize": "^6.37.3"
+    "sequelize": "^6.37.3",
+    "sqlite3": "^5.1.7",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
-    "@types/node": "^22.5.1",
+    "@types/node": "^22.5.2",
+    "@types/uuid": "^10.0.0",
     "concurrently": "^8.2.2",
     "nodemon": "^3.1.4",
     "sequelize-cli": "^6.6.2",

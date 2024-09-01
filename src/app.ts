@@ -1,8 +1,11 @@
 // Arquivo principal de funcionamento da API, todos mecanismos utilizados devem ser chamados aqui
-
 import dotenv from 'dotenv';
 import { resolve } from 'path';
 import express, { Application } from 'express';
+
+// Importação do Sequelize e do modelo Measure
+import sequelize from './database';
+import Measure from './models/Measure';
 
 // Importação dos arquivos de configuração de rotas
 import Routes from './routes/measureRoutes';
@@ -17,6 +20,7 @@ class App {
     this.app = express();
     this.middlewares();
     this.routes();
+    this.database();
   }
 
   // Configuração de middlewares
@@ -25,10 +29,20 @@ class App {
     this.app.use(express.json({ limit: '50mb' }));
   }
 
-
   // Definição de rotas da API
   private routes(): void {
     this.app.use('/', Routes);
+  }
+
+  // Inicialização do banco de dados
+  private async database(): Promise<void> {
+    try {
+      // Sincroniza todos os modelos com o banco de dados
+      await sequelize.sync({ force: false });
+      console.log('Banco de dados sincronizado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao sincronizar o banco de dados:', error);
+    }
   }
 }
 
