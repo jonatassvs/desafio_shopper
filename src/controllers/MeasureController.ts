@@ -51,12 +51,18 @@ class MeasureController{
     // Definir o caminho onde o arquivo será salvo
     const filePath = path.join(__dirname, '..', '..', 'uploads', 'images', `image.${extension}`);
 
-    // Simular verificação de duplicidade
-    const isDuplicate = false; // Substitua pela lógica real de verificação de duplicidade
-    if (isDuplicate) {
+    // Verificar se já existe uma medida com o mesmo tipo e data
+    const existingMeasure = await Measure.findOne({
+      where: {
+        measure_type: measure_type.toUpperCase(),
+        measure_datetime
+      }
+    });
+
+    if (existingMeasure) {
       res.status(409).json({
-        error_code: "DOUBLE_REPORT",
-        error_description: "Leitura do mês já realizada"
+        error_code: 'DOUBLE_REPORT',
+        error_description: 'Já existe uma medida para este tipo e data.',
       });
       return;
     }
