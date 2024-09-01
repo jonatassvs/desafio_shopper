@@ -27,6 +27,9 @@ class App {
   private middlewares(): void {
     // Middleware para interpretar JSON
     this.app.use(express.json({ limit: '50mb' }));
+
+    // Middleware para servir arquivos estáticos da pasta uploads
+    this.app.use('/uploads', express.static(resolve(__dirname, '../uploads')));
   }
 
   // Definição de rotas da API
