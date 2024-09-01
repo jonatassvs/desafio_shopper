@@ -105,8 +105,57 @@ class MeasureController{
     }
   }
 
-  confirm(req: Request, res: Response){
-    res.send('Confirmado');
+  // Metodo responsável por confirmar os dados no banco de dados
+  async confirm(req: Request, res: Response){
+    const {measure_uuid, confirmed_value} = req.body;
+
+    // Validar se todos os campos obrigatórios estão presentes
+    if(!measure_uuid || !confirmed_value){
+      res.status(400).json({
+        error_code: "INVALID_DATA",
+        error_description: "Campos obrigatórios não fornecidos."
+      });
+      return;
+    }
+
+    try {
+      // Buscar a medida no banco de dados
+      const measure = await Measure.findOne({ where: { measure_uuid } });
+
+      // Verificar se a medida foi encontrada
+      if (!measure) {
+        res.status(404).json({
+          error_code: 'MEASURE_NOT_FOUND',
+          error_description: 'Leitura não encontrada.'
+        });
+        return;
+      }
+
+      // Verificar se a medida já foi confirmada
+      if (measure.confirmed_value !== 0) {
+        res.status(409).json({
+          error_code: 'CONFIRMATION_DUPLICATE',
+          error_description: 'Leitura já confirmada.'
+        });
+        return;
+      }
+
+      // Atualizar o campo confirmed_value
+      measure.confirmed_value = confirmed_value;
+      await measure.save();
+
+      // Responder com sucesso
+      res.status(200).json({
+        success: true
+      });
+    } catch (error) {
+      console.error('Erro ao confirmar a leitura:', error);
+      res.status(500).json({
+        error_code: 'SERVER_ERROR',
+        error_description: 'Erro ao processar a confirmação da leitura.'
+      });
+    }
+
   }
 
   list(req: Request, res: Response){
