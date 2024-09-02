@@ -3,34 +3,10 @@ version: '3'
 services:
   api:
     build: .
+    restart: always
     container_name: api_container
-    command: npm run start
-    # depends_on:
-    #   - mariadb
     ports: 
       - 3000:3000
     volumes:
       - .:/usr/src/app
-
-#   mariadb:
-#     container_name: ${DATABASE_CONTAINER_NAME}
-#     env_file: .env
-#     environment:
-#       MARIADB_USER: root
-#       MARIADB_PASSWORD: ${DATABASE_PASS}
-#       MARIADB_ROOT_PASSWORD: ${DATABASE_PASS}
-#       MARIADB_DATABASE: ${DATABASE_NAME}
-#     expose:
-#       - 3306
-#     image: mariadb:latest
-#     ports:
-#       - 3306:3306
-#     restart: always
-#     volumes: 
-#       - db-config:/etc/mysql
-#       - db-data:/var/lib/mysql
-#       - ./db/backup/files/:/data_backup/
-
-# volumes: 
-#   db-config:
-#   db-data:
+      - /usr/src/app/node_modules

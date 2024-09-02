@@ -149,11 +149,6 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
-"@types/geojson@^7946.0.14":
-  version "7946.0.14"
-  resolved "https://registry.npmjs.org/@types/geojson/-/geojson-7946.0.14.tgz"
-  integrity sha512-WCfD5Ht3ZesJUsONdhvm84dmzWOiOzOAqOncN0++w0lBw1o8OuDNJF2McvvCef/yBqb/HYRahp1BYtODFQ8bRg==
-
 "@types/http-errors@*":
   version "2.0.4"
   resolved "https://registry.npmjs.org/@types/http-errors/-/http-errors-2.0.4.tgz"
@@ -173,13 +168,6 @@
   version "22.5.2"
   resolved "https://registry.npmjs.org/@types/node/-/node-22.5.2.tgz"
   integrity sha512-acJsPTEqYqulZS/Yp/S3GgeE6GZ0qYODUR8aVr/DkhHQ8l9nd4j5x1/ZJy9/gHrRlFMqkO6i0I3E27Alu4jjPg==
-  dependencies:
-    undici-types "~6.19.2"
-
-"@types/node@^20.11.17":
-  version "20.16.2"
-  resolved "https://registry.npmjs.org/@types/node/-/node-20.16.2.tgz"
-  integrity sha512-91s/n4qUPV/wg8eE9KHYW1kouTfDk2FPGjXbBMfRWP/2vg1rCXNQL1OCabwGs0XSdukuK+MwCDXE30QpSeMUhQ==
   dependencies:
     undici-types "~6.19.2"
 
@@ -695,11 +683,6 @@ delegates@^1.0.0:
   resolved "https://registry.npmjs.org/delegates/-/delegates-1.0.0.tgz"
   integrity sha512-bd2L678uiWATM6m5Z1VzNCErI3jiGzt6HGY8OVICs40JQq/HALfbyNJmp0UDakEY4pMMaN0Ly5om/B1VI/+xfQ==
 
-denque@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.npmjs.org/denque/-/denque-2.1.0.tgz"
-  integrity sha512-HVQE3AAb/pxF8fQAoiqpvg9i3evqug3hoiwakOyZAwJm+6vZehbkYXZ0l4JxS+I3QxM97v5aaRNhj8v5oBhekw==
-
 depd@2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/depd/-/depd-2.0.0.tgz"
@@ -1171,13 +1154,6 @@ iconv-lite@^0.6.2:
   dependencies:
     safer-buffer ">= 2.1.2 < 3.0.0"
 
-iconv-lite@^0.6.3:
-  version "0.6.3"
-  resolved "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.6.3.tgz"
-  integrity sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==
-  dependencies:
-    safer-buffer ">= 2.1.2 < 3.0.0"
-
 iconv-lite@0.4.24:
   version "0.4.24"
   resolved "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.24.tgz"
@@ -1386,17 +1362,6 @@ make-fetch-happen@^9.1.0:
     promise-retry "^2.0.1"
     socks-proxy-agent "^6.0.0"
     ssri "^8.0.0"
-
-mariadb@^3.3.1:
-  version "3.3.1"
-  resolved "https://registry.npmjs.org/mariadb/-/mariadb-3.3.1.tgz"
-  integrity sha512-L8bh4iuZU3J8H7Co7rQ6OY9FDLItAN1rGy8kPA7Dyxo8AiHADuuONoypKKp1pE09drs6e5LR7UW9luLZ/A4znA==
-  dependencies:
-    "@types/geojson" "^7946.0.14"
-    "@types/node" "^20.11.17"
-    denque "^2.1.0"
-    iconv-lite "^0.6.3"
-    lru-cache "^10.2.0"
 
 media-typer@0.3.0:
   version "0.3.0"
