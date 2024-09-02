@@ -1,0 +1,6 @@
+# Ignorar o diretório node_modules
+node_modules
+
+# Ignorar arquivos e diretórios temporários
+npm-debug.log
+*.tgz
